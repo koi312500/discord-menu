@@ -5,8 +5,8 @@ import {
   RetryCancelMenu,
   YesNoCancelMenu,
   YesNoMenu,
-} from "../../src/menus/buttonMenuSamples"
-import { PaginationSelectMenu } from "../../src/menus/selectMenu"
+} from "../../src"
+import { PaginationSelectMenu } from "../../src"
 
 class Test extends Extension {
   @applicationCommand({
