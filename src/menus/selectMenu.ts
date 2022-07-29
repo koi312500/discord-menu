@@ -99,10 +99,8 @@ export class PaginationSelectMenu extends SelectMenu {
     interaction: CommandInteraction,
     options: InteractionReplyOptions
   ): Promise<SelectMenuInteraction | null> {
-    this.select = new SelectMenuBuilder()
     this.select
       .setOptions(this.getPageOptions(this.page))
-      .setCustomId("selectSelect")
 
     this.previousButton.setDisabled(this.isPreviousDisabled())
     this.nextButton.setDisabled(this.isNextDisabled())
@@ -140,6 +138,7 @@ export class PaginationSelectMenu extends SelectMenu {
           // componentType: ComponentType.Button,
         })
       } catch (e) {
+        await interaction.editReply(options)
         return null
       }
 
