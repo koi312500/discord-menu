@@ -9,6 +9,11 @@ import {
 
 export abstract class ButtonMenu extends DiscordMenu {
   components: ActionRowBuilder<MessageActionRowComponentBuilder>[] = []
+  afterReact: "ResetComponents" | "DisableComponents" = "ResetComponents"
+
+  async setAfterReact(handle: "ResetComponents" | "DisableComponents") {
+    this.afterReact = handle
+  }
 
   async awaitFor(i: CommandInteraction, options: InteractionReplyOptions) {
     if (!options.components) options.components = []
@@ -25,10 +30,14 @@ export abstract class ButtonMenu extends DiscordMenu {
       const resI = await message.awaitMessageComponent({
         time: 15000,
       })
-      await resI.deferUpdate()
+      if (this.afterReact === "ResetComponents") {
+        await i.editReply(Object.assign(options, { components: [] }))
+      }
       return resI
     } catch (e) {
-      await i.deferReply()
+      if (this.afterReact === "ResetComponents") {
+        await i.editReply(Object.assign(options, { components: [] }))
+      }
       return null
     }
   }

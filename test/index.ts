@@ -12,7 +12,7 @@ console.log(DiscordMenu)
 
 const run = async () => {
   await cts.enableApplicationCommandsExtension({
-    guilds: ["997856273959755807"],
+    guilds: ["969907569592250449", "997856273959755807"],
   })
   await cts.registry.loadAllModulesInDirectory(path.join(__dirname, "modules"))
   await client.login(process.env.BOT_TOKEN)

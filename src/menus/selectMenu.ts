@@ -28,6 +28,26 @@ export class PaginationSelectMenu extends SelectMenu {
   page = 0
   message: Message | undefined
 
+  setCustomId(id: string) {
+    this.select.setCustomId(id)
+    return this
+  }
+
+  setPreviousLabel(label: string) {
+    this.previousButton.setLabel(label)
+    return this
+  }
+
+  setNextLabel(label: string) {
+    this.nextButton.setLabel(label)
+    return this
+  }
+
+  setPlaceholder(placeholder: string) {
+    this.select.setPlaceholder(placeholder)
+    return this
+  }
+
   constructor() {
     super()
     this.previousButton = new ButtonBuilder()
