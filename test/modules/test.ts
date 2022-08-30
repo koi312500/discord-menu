@@ -7,24 +7,30 @@ import {
   YesNoMenu,
 } from "../../src"
 import { PaginationSelectMenu } from "../../src"
+import { CustomId } from "../../src/types"
 
 class Test extends Extension {
   @applicationCommand({
     type: ApplicationCommandType.ChatInput,
     name: "yes_no_test",
     description: "test",
-    // nameLocalizations: {
-    //   ko: "키뮤바보",
-    //   "en-US": "kimu",
-    // },
   })
   async yesNoTest(i: ChatInputCommandInteraction) {
-    const resInteraction = await i.sendMenu({
-      content: "와 샌즈",
+    const resI = await i.sendMenu({
+      content: "Do you know Gangnam Style?",
       menu: new YesNoMenu(),
     })
-    if (!resInteraction) return i.editReply({ content: "시간초과예요!" })
-    await i.editReply(`${resInteraction.customId}을 누르셨어요!`)
+
+    // Returns void if the response time limit has been exceeded.
+    if (!resI) return i.editReply({ content: "Timeout!" })
+
+    // You can check which button the user pressed through 'resI.customId'
+    switch (resI.customId) {
+      case CustomId.YesButton:
+        return i.editReply({ content: "You choose Yes!" })
+      case CustomId.NoButton:
+        return i.editReply({ content: "You choose No!" })
+    }
   }
 
   @applicationCommand({
