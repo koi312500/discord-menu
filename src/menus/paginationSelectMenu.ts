@@ -24,11 +24,11 @@ export class PaginationSelectMenu extends SelectMenu {
   constructor() {
     super()
     this.previousButton = new ButtonBuilder()
-      .setLabel("이전")
+      .setLabel("Previous")
       .setCustomId(CustomId.PaginationPreviousButton)
       .setStyle(ButtonStyle.Primary)
     this.nextButton = new ButtonBuilder()
-      .setLabel("다음")
+      .setLabel("Next")
       .setCustomId(CustomId.PaginationNextButton)
       .setStyle(ButtonStyle.Primary)
     this.pageButton = new ButtonBuilder()
@@ -153,6 +153,15 @@ export class PaginationSelectMenu extends SelectMenu {
 
           case AfterReact.DisableComponents:
             await i.editReply(options)
+            break
+
+          case AfterReact.ResetAllComponents:
+            await i.editReply({ ...options, components: [] })
+            break
+
+          case AfterReact.DisableAllComponents:
+            await i.editReply({ ...options, components: [] })
+            break
         }
         return
       }

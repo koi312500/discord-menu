@@ -15,4 +15,6 @@ export enum AfterReact {
   DisableComponents,
   LoopForTimeout,
   DoNotAnything,
+  ResetAllComponents,
+  DisableAllComponents,
 }
