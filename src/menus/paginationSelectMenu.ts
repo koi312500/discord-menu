@@ -3,6 +3,7 @@ import {
   APISelectMenuOption,
   AwaitMessageCollectorOptionsParams,
   ButtonBuilder,
+  ButtonInteraction,
   ButtonStyle,
   CommandInteraction,
   ComponentEmojiResolvable,
@@ -128,10 +129,20 @@ export class PaginationSelectMenu extends SelectMenu {
 
     this.message = await i.fetchReply()
 
+    const filter = (i: ButtonInteraction) => {
+      return (
+        [
+          CustomId.PaginationPreviousButton,
+          CustomId.PaginationNextButton,
+          // @ts-ignore
+        ].includes(i.customId) && (this.filter_ ? this.filter_(i) : true)
+      )
+    }
+
     while (true) {
       const resI = await this.message
         .awaitMessageComponent({
-          ...(this.filter_ ? { filter: this.filter_ } : {}),
+          filter,
           time: this.timeout,
           componentType: ComponentType.Button,
         })

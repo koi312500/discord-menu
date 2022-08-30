@@ -35,7 +35,7 @@ export abstract class ButtonMenu extends DiscordMenu {
           ...(this.filter ? { filter: this.filter } : {}),
         })
         .catch((e) => {
-          if (e.message === "InteractionCollectorError") return
+          if (e.code === "InteractionCollectorError") return
           throw e
         })
 

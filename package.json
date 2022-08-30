@@ -1,6 +1,6 @@
 {
   "name": "@kimusoft/discord-menu",
-  "version": "2.0.0",
+  "version": "2.0.4",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
