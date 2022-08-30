@@ -6,7 +6,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pikokr/command.ts": "^5.0.3",
-    "discord.js": "^14.0.3",
+    "discord.js": "^14.3.0",
     "dotenv": "^16.0.1",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "ts-node src"
+    "test": "ts-node test"
   },
   "dependencies": {
     "@types/lodash": "^4.14.182",

@@ -14,7 +14,7 @@ declare module "discord.js" {
   interface CommandInteraction {
     sendMenu(
       options: InteractionMenuOptions
-    ): Promise<SelectMenuInteraction | ButtonInteraction | null>
+    ): Promise<SelectMenuInteraction | ButtonInteraction | void>
   }
 }
 

@@ -1,44 +1,57 @@
 import { DiscordMenu } from "./menu"
 import {
-  ActionRowBuilder,
+  AwaitMessageCollectorOptionsParams,
+  ButtonInteraction,
   ButtonStyle,
   CommandInteraction,
+  ComponentType,
   InteractionReplyOptions,
-  MessageActionRowComponentBuilder,
 } from "discord.js"
+import { AfterReact } from "../types"
 
 export abstract class ButtonMenu extends DiscordMenu {
-  components: ActionRowBuilder<MessageActionRowComponentBuilder>[] = []
-  afterReact: "ResetComponents" | "DisableComponents" = "ResetComponents"
+  filter:
+    | AwaitMessageCollectorOptionsParams<ComponentType.Button>["filter"]
+    | undefined
 
-  async setAfterReact(handle: "ResetComponents" | "DisableComponents") {
-    this.afterReact = handle
-  }
+  async awaitFor(
+    i: CommandInteraction,
+    options: InteractionReplyOptions
+  ): Promise<ButtonInteraction | void> {
+    options.components = options.components ? options.components : []
+    const message = await (i.replied || i.deferred
+      ? i.editReply
+      : i.reply
+    ).call(i, {
+      ...options,
+      components: [...this.components, ...options.components],
+    })
 
-  async awaitFor(i: CommandInteraction, options: InteractionReplyOptions) {
-    if (!options.components) options.components = []
-    options.components.push(...this.components)
+    while (true) {
+      const resI = await message
+        .awaitMessageComponent({
+          time: this.timeout,
+          componentType: ComponentType.Button,
+          ...(this.filter ? { filter: this.filter } : {}),
+        })
+        .catch((e) => {
+          if (e.message === "InteractionCollectorError") return
+          throw e
+        })
 
-    let message
-    if (i.isRepliable()) {
-      message = await i.reply(options)
-    } else {
-      message = await i.editReply(options)
-    }
+      if (this.afterReact === AfterReact.LoopForTimeout) continue
+      await resI?.deferUpdate()
 
-    try {
-      const resI = await message.awaitMessageComponent({
-        time: 15000,
-      })
-      if (this.afterReact === "ResetComponents") {
-        await i.editReply(Object.assign(options, { components: [] }))
+      switch (this.afterReact) {
+        case AfterReact.ResetComponents:
+          await i.editReply(options)
+          break
+
+        case AfterReact.DisableComponents:
+          await i.editReply(options)
       }
+
       return resI
-    } catch (e) {
-      if (this.afterReact === "ResetComponents") {
-        await i.editReply(Object.assign(options, { components: [] }))
-      }
-      return null
     }
   }
 }

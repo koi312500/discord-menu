@@ -1,72 +1,62 @@
 import { DiscordMenu } from "./menu"
 import {
   ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  CommandInteraction,
-  InteractionReplyOptions,
-  Message,
-  ComponentType,
-  SelectMenuBuilder,
-  SelectMenuOptionBuilder,
   AwaitMessageCollectorOptionsParams,
-  APISelectMenuOption,
+  CommandInteraction,
+  ComponentType,
+  InteractionReplyOptions,
+  MessageActionRowComponentBuilder,
+  SelectMenuBuilder,
   SelectMenuInteraction,
-  InteractionUpdateOptions,
 } from "discord.js"
-import _ from "lodash"
+import { AfterReact } from "../types"
 
-export class SelectMenu extends DiscordMenu {}
-
-export class PaginationSelectMenu extends SelectMenu {
+export class SelectMenu extends DiscordMenu {
   select = new SelectMenuBuilder()
   options: any = []
-  previousButton: ButtonBuilder
-  nextButton: ButtonBuilder
-  pageButton: ButtonBuilder
-  pageSize = 25
-  page = 0
-  message: Message | undefined
+  filter:
+    | AwaitMessageCollectorOptionsParams<ComponentType.SelectMenu>["filter"]
+    | undefined
 
-  setCustomId(id: string) {
-    this.select.setCustomId(id)
+  /**
+   * Sets the custom id for this select menu
+   *
+   * @param customId - The custom id to use for this select menu
+   */
+  setCustomId(customId: string) {
+    this.select.setCustomId(customId)
     return this
   }
-
-  setPreviousLabel(label: string) {
-    this.previousButton.setLabel(label)
-    return this
-  }
-
-  setNextLabel(label: string) {
-    this.nextButton.setLabel(label)
-    return this
-  }
-
+  /**
+   * Sets the placeholder for this select menu
+   *
+   * @param placeholder - The placeholder to use for this select menu
+   */
   setPlaceholder(placeholder: string) {
     this.select.setPlaceholder(placeholder)
     return this
   }
-
-  constructor() {
-    super()
-    this.previousButton = new ButtonBuilder()
-      .setLabel("이전")
-      .setCustomId("previous")
-      .setStyle(ButtonStyle.Primary)
-    this.nextButton = new ButtonBuilder()
-      .setLabel("다음")
-      .setCustomId("next")
-      .setStyle(ButtonStyle.Primary)
-    this.pageButton = new ButtonBuilder()
-      .setCustomId("page")
-      .setStyle(ButtonStyle.Secondary)
-      .setDisabled(true)
-    this.updatePageButton()
+  /**
+   * Sets the minimum values that must be selected in the select menu
+   *
+   * @param minValues - The minimum values that must be selected
+   */
+  setMinValues(minValues: number) {
+    this.select.setMinValues(minValues)
+    return this
+  }
+  /**
+   * Sets the maximum values that must be selected in the select menu
+   *
+   * @param maxValues - The maximum values that must be selected
+   */
+  setMaxValues(maxValues: number) {
+    this.select.setMaxValues(maxValues)
+    return this
   }
 
-  private updatePageButton() {
-    this.pageButton.setLabel(`${this.page + 1} / ${this.getPageLength()}`)
+  toJSON() {
+    return this.select.toJSON()
   }
 
   addOptions(options: any) {
@@ -74,127 +64,50 @@ export class PaginationSelectMenu extends SelectMenu {
     return this
   }
 
-  getPageOptions(page: number) {
-    return this.options.slice(page * this.pageSize, (page + 1) * this.pageSize)
-  }
-
-  getPageLength() {
-    return Math.ceil(this.options.length / this.pageSize)
-  }
-
-  isPreviousDisabled() {
-    return this.page <= 0
-  }
-
-  isNextDisabled() {
-    return this.page === this.getPageLength() - 1
-  }
-
-  setPageSize(pageSize: number) {
-    this.pageSize = pageSize
-    return this
-  }
-
   async awaitFor(
-    interaction: CommandInteraction,
+    i: CommandInteraction,
     options: InteractionReplyOptions
-  ): Promise<SelectMenuInteraction | null> {
-    this.select
-      .setOptions(this.getPageOptions(this.page))
+  ): Promise<SelectMenuInteraction | void> {
+    options.components = [
+      new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+        this.select
+      ),
+      ...(options.components || []),
+    ]
 
-    this.previousButton.setDisabled(this.isPreviousDisabled())
-    this.nextButton.setDisabled(this.isNextDisabled())
-    this.updatePageButton()
-    const _options = {
-      ...options,
-      components: [
-        new ActionRowBuilder().addComponents(this.select),
-        new ActionRowBuilder().addComponents([
-          this.previousButton,
-          this.pageButton,
-          this.nextButton,
-        ]),
-      ],
-    }
+    const message = await (i.replied || i.deferred
+      ? i.editReply
+      : i.reply
+    ).call(i, options)
 
-    const replied = interaction.deferred || interaction.replied
-
-    await (replied
-      ? interaction.editReply.bind(interaction)
-      : interaction.reply.bind(interaction))(_options as any)
-
-    this.message = await interaction.fetchReply()
-
-    // eslint-disable-next-line no-constant-condition
     while (true) {
-      const filter: AwaitMessageCollectorOptionsParams<ComponentType.Button>["filter"] =
-        (m) => m.user.id === interaction.user.id
-
-      let ri
-      try {
-        ri = await this.message.awaitMessageComponent({
-          // filter,
-          time: 15000,
-          // componentType: ComponentType.Button,
+      const resI = await message
+        .awaitMessageComponent({
+          time: this.timeout,
+          filter: this.filter,
+          componentType: ComponentType.SelectMenu,
         })
-      } catch (e) {
-        await interaction.editReply(options)
-        return null
+        .catch((e) => {
+          if (e.message === "InteractionCollectorError") return
+          throw e
+        })
+
+      if (!resI) return
+
+      switch (this.afterReact) {
+        case AfterReact.ResetComponents:
+          await i.editReply({
+            ...options,
+            components: [],
+          })
+          return resI
+
+        case AfterReact.DisableComponents:
+          return resI
+
+        case AfterReact.DoNotAnything:
+          return resI
       }
-
-      if (ri.isSelectMenu()) {
-        return ri
-      }
-      if (ri.customId === "next") this.page++
-      if (ri.customId === "previous") this.page--
-
-      this.select.setOptions(this.getPageOptions(this.page))
-
-      this.previousButton.setDisabled(this.isPreviousDisabled())
-      this.nextButton.setDisabled(this.isNextDisabled())
-      this.updatePageButton()
-      const _options = Object.assign(options, {
-        components: [
-          new ActionRowBuilder().addComponents(this.select),
-          new ActionRowBuilder().addComponents([
-            this.previousButton,
-            this.pageButton,
-            this.nextButton,
-          ]),
-        ],
-      })
-
-      await ri.update(_options as InteractionUpdateOptions)
-    }
-  }
-}
-
-type PaginationOptions = {
-  pageSize: number
-}
-
-export const pagination = (
-  opt: Partial<PaginationOptions> = {}
-): MethodDecorator => {
-  return (target, propertyKey, descriptor) => {
-    const desc = descriptor as unknown as TypedPropertyDescriptor<
-      (...args: unknown[]) => void
-    >
-    const options = _.merge<Partial<PaginationOptions>, PaginationOptions>(
-      opt,
-      {
-        pageSize: 25,
-      }
-    )
-
-    const method = descriptor.value! as unknown as (
-      ...args: unknown[]
-    ) => Promise<SelectMenuOptionBuilder[] | null>
-
-    desc.value = async function () {
-      const result = await method()
-      if (!result) return
-      console.log(result)
     }
   }
 }

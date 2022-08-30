@@ -106,6 +106,7 @@ class Test extends Extension {
         { label: "청소24", value: "342sdfssdfsdfdssddfdfsefsefdsfsd432" },
       ])
       .setPageSize(5)
+      .setCustomId("Test")
 
     const resInteraction = await i.sendMenu({
       content: "와 샌즈",
@@ -117,6 +118,4 @@ class Test extends Extension {
   }
 }
 
-export const setup = () => {
-  return new Test()
-}
+export const setup = () => new Test()

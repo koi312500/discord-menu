@@ -5,6 +5,7 @@ import {
   MessageActionRowComponentBuilder,
 } from "discord.js"
 import { ButtonMenu } from "./buttonMenu"
+import { CustomId } from "../types"
 
 export class YesNoMenu extends ButtonMenu {
   yesButton: ButtonBuilder
@@ -14,11 +15,11 @@ export class YesNoMenu extends ButtonMenu {
     super()
     this.yesButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Success)
-      .setCustomId("Yes")
+      .setCustomId(CustomId.YesButton)
       .setLabel("Yes")
     this.noButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Danger)
-      .setCustomId("No")
+      .setCustomId(CustomId.NoButton)
       .setLabel("No")
 
     this.components.push(
@@ -41,11 +42,11 @@ export class RetryCancelMenu extends ButtonMenu {
     this.retryButton = new ButtonBuilder()
       .setEmoji("🔄")
       .setStyle(ButtonStyle.Primary)
+      .setCustomId(CustomId.RetryButton)
       .setLabel("Retry")
-      .setCustomId("Retry")
     this.cancelButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Secondary)
-      .setCustomId("Cancel")
+      .setCustomId(CustomId.CancelButton)
       .setLabel("Cancel")
 
     this.components.push(
@@ -75,11 +76,11 @@ export class OKCancelMenu extends ButtonMenu {
     super()
     this.okButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Success)
-      .setCustomId("OK")
+      .setCustomId(CustomId.OkButton)
       .setLabel("OK")
     this.cancelButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Secondary)
-      .setCustomId("Cancel")
+      .setCustomId(CustomId.CancelButton)
       .setLabel("Cancel")
 
     this.components.push(
@@ -110,15 +111,15 @@ export class YesNoCancelMenu extends ButtonMenu {
     super()
     this.yesButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Success)
-      .setCustomId("Yes")
+      .setCustomId(CustomId.YesButton)
       .setLabel("Yes")
     this.noButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Danger)
-      .setCustomId("No")
+      .setCustomId(CustomId.NoButton)
       .setLabel("No")
     this.cancelButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Secondary)
-      .setCustomId("Cancel")
+      .setCustomId(CustomId.CancelButton)
       .setLabel("Cancel")
 
     this.components.push(
