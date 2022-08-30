@@ -42,6 +42,7 @@ export class PaginationSelectMenu extends SelectMenu {
     filter: AwaitMessageCollectorOptionsParams<ComponentType.Button>["filter"]
   ) {
     this.filter_ = filter
+    return this
   }
 
   pageButton: ButtonBuilder

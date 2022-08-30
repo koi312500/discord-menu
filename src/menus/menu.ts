@@ -25,6 +25,7 @@ export abstract class DiscordMenu {
 
   setAfterReact(afterReact: AfterReact) {
     this.afterReact = afterReact
+    return this
   }
 
   /**
@@ -34,6 +35,7 @@ export abstract class DiscordMenu {
   setTimeout(timeout: number) {
     if (timeout <= 0) throw new Error("Not a valid timeout")
     this.timeout = timeout
+    return this
   }
 
   setFilter(
@@ -42,6 +44,7 @@ export abstract class DiscordMenu {
       | AwaitMessageCollectorOptionsParams<ComponentType.SelectMenu>["filter"]
   ) {
     this.filter = filter
+    return this
   }
 
   async awaitFor(
