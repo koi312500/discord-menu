@@ -56,10 +56,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@pikokr/command.ts@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@pikokr/command.ts/-/command.ts-5.0.3.tgz#144f9f8541da320f250a43f6aa129891634dde68"
-  integrity sha512-0QuOA90fWxdPDioHRj6UccR2CxpthGA+GLmVGvSXWYapYWhhHUpr/tJQzN3R6WuD/ZIh9y0xGz78oj7C9xm3Sg==
+"@pikokr/command.ts@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@pikokr/command.ts/-/command.ts-5.2.0.tgz#0b766e1b9e2741e841570f573997c462e206c459"
+  integrity sha512-1yxpeThidP/P4fhWtanHxkmDJPaTevSRrsXS3JDdttxlRQ8UxlNQKivfd8GPZmPGrOmBbLx7jqbeTu+DkYaz+A==
   dependencies:
     "@types/node" "^16.0.0"
     chalk "4.1.2"
@@ -111,10 +111,10 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.3.tgz#472eaab5f15c1ffdd7f8628bd4c4f753995ec79e"
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
-"@types/lodash@^4.14.182":
-  version "4.14.182"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
-  integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
+"@types/lodash@^4.14.184":
+  version "4.14.184"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.184.tgz#23f96cd2a21a28e106dc24d825d4aa966de7a9fe"
+  integrity sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==
 
 "@types/minimatch@^3.0.3", "@types/minimatch@^3.0.4":
   version "3.0.5"

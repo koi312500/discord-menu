@@ -1,11 +1,11 @@
 {
   "name": "@kimusoft/discord-menu",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
   "devDependencies": {
-    "@pikokr/command.ts": "^5.0.3",
+    "@pikokr/command.ts": "^5.2.0",
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.1",
     "prettier": "^2.7.1",
@@ -17,7 +17,7 @@
     "test": "ts-node test"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.182",
+    "@types/lodash": "^4.14.184",
     "lodash": "^4.17.21"
   }
 }
