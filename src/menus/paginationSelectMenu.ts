@@ -126,6 +126,7 @@ export class PaginationSelectMenu extends SelectMenu {
         ...options.components,
       ],
     })
+    if (this.getPageLength() === 1) return
 
     this.message = await i.fetchReply()
 
