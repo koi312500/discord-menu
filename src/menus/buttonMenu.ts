@@ -36,7 +36,7 @@ export abstract class ButtonMenu extends DiscordMenu {
         })
         .catch((e) => {
           if (e.code === "InteractionCollectorError") return
-          throw e
+          // throw e
         })
 
       if (this.afterReact === AfterReact.LoopForTimeout) continue

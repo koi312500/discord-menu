@@ -152,7 +152,7 @@ export class PaginationSelectMenu extends SelectMenu {
             e.code === "InteractionCollectorError"
           )
             return
-          throw e
+          // throw e
         })
 
       if (!resI) {
