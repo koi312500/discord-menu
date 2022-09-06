@@ -5,6 +5,7 @@ import {
   CommandInteraction,
   ComponentType,
   InteractionReplyOptions,
+  Message,
   MessageActionRowComponentBuilder,
   SelectMenuBuilder,
   SelectMenuInteraction,
@@ -75,10 +76,15 @@ export class SelectMenu extends DiscordMenu {
       ...(options.components || []),
     ]
 
-    const message = await (i.replied || i.deferred
-      ? i.editReply
-      : i.reply
-    ).call(i, options)
+    let message: Message
+    if (this.followUp) {
+      message = await i.followUp(options)
+    } else {
+      message = await (i.replied || i.deferred ? i.editReply : i.reply).call(
+        i,
+        options
+      )
+    }
 
     while (true) {
       const resI = await message

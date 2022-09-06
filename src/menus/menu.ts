@@ -19,12 +19,18 @@ export abstract class DiscordMenu {
       )
     | undefined
   afterReact: AfterReact = AfterReact.ResetComponents
+  followUp = false
 
   // milliseconds
   timeout: number = 15000
 
   setAfterReact(afterReact: AfterReact) {
     this.afterReact = afterReact
+    return this
+  }
+
+  useFollowUp(use: boolean) {
+    this.followUp = use
     return this
   }
 

@@ -6,6 +6,7 @@ import {
   CommandInteraction,
   ComponentType,
   InteractionReplyOptions,
+  Message,
 } from "discord.js"
 import { AfterReact } from "../types"
 
@@ -19,13 +20,20 @@ export abstract class ButtonMenu extends DiscordMenu {
     options: InteractionReplyOptions
   ): Promise<ButtonInteraction | void> {
     options.components = options.components ? options.components : []
-    const message = await (i.replied || i.deferred
-      ? i.editReply
-      : i.reply
-    ).call(i, {
+
+    const menuOption = {
       ...options,
       components: [...this.components, ...options.components],
-    })
+    }
+    let message: Message
+    if (this.followUp) {
+      message = await i.followUp(menuOption)
+    } else {
+      message = await (i.replied || i.deferred ? i.editReply : i.reply).call(
+        i,
+        menuOption
+      )
+    }
 
     while (true) {
       const resI = await message

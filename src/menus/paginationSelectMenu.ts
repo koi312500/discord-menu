@@ -109,10 +109,8 @@ export class PaginationSelectMenu extends SelectMenu {
     this.nextButton.setDisabled(this.isNextButtonDisabled())
     this.updatePageButton()
 
-    const replied = i.deferred || i.replied
-
     options.components = options.components ? options.components : []
-    await (replied ? i.editReply.bind(i) : i.reply.bind(i))({
+    const paginatedOptions = {
       ...options,
       components: [
         new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
@@ -125,7 +123,14 @@ export class PaginationSelectMenu extends SelectMenu {
         ]),
         ...options.components,
       ],
-    })
+    }
+
+    if (this.followUp) {
+      await i.followUp(paginatedOptions)
+    } else {
+      const replied = i.deferred || i.replied
+      await (replied ? i.editReply.bind(i) : i.reply.bind(i))(paginatedOptions)
+    }
     if (this.getPageLength() === 1) return
 
     this.message = await i.fetchReply()
