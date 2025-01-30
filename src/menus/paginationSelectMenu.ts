@@ -131,7 +131,6 @@ export class PaginationSelectMenu extends SelectMenu {
       const replied = i.deferred || i.replied
       await (replied ? i.editReply.bind(i) : i.reply.bind(i))(paginatedOptions)
     }
-    if (this.getPageLength() === 1) return
 
     this.message = await i.fetchReply()
 
@@ -173,11 +172,11 @@ export class PaginationSelectMenu extends SelectMenu {
             break
 
           case AfterReact.ResetAllComponents:
-            await i.editReply({ ...options, components: [] })
+            await i.editReply({components: [] })
             break
 
           case AfterReact.DisableAllComponents:
-            await i.editReply({ ...options, components: [] })
+            await i.editReply({components: [] })
             break
         }
         return
