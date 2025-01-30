@@ -119,7 +119,7 @@ class Test extends Extension {
       menu: select,
     })
     if (!resInteraction) return i.editReply({ content: "시간초과예요!" })
-    if (!resInteraction.isSelectMenu()) return
+    if (!resInteraction.isStringSelectMenu()) return
     await i.editReply(`${resInteraction.values}을 누르셨어요!`)
   }
 }
